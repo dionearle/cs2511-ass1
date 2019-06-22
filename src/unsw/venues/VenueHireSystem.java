@@ -206,8 +206,8 @@ public JSONArray list(String venue) {
 			List<Reservation> reservations = reservationManager.getReservations();
 
 			Collections.sort(reservations, new Comparator<Reservation>() {
-		        public int compare(Reservation object1, Reservation object2) {
-		            return object1.getStartDate().compareTo(object2.getStartDate());
+		        public int compare(Reservation first, Reservation second) {
+		            return first.getStartDate().compareTo(second.getStartDate());
 		        }
 		    }
 		    );
