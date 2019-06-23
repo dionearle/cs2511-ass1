@@ -182,6 +182,7 @@ public class VenueHireSystem {
     	
     	if (!reservationManager.findReservation(id)) {
     		result.put("status", "rejected");
+    		return result;
     	}
     	    	
     	Reservation reservation = reservationManager.getReservation(id);
@@ -216,7 +217,8 @@ public JSONArray list(String venue) {
 				
 				List<Room> reservationRooms = reservations.get(j).getRooms();
 				for (int k=0; k < reservationRooms.size(); k++) {
-					if (reservationRooms.get(k).getName().equals(rooms.get(i).getName())) {
+					if (reservationRooms.get(k).getName().equals(rooms.get(i).getName())
+					&& reservations.get(j).getVenue().getName().equals(venue)) {
 						JSONObject reservation = new JSONObject();
 						reservation.put("id", reservations.get(j).getId());
 						reservation.put("start", reservations.get(j).getStartDate());

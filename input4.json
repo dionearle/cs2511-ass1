@@ -1,0 +1,3 @@
+{ "command": "cancel", "id": "Non Existent Event" }
+{ "command": "change", "id": "Still Non Existent Event", "start": "2019-03-27", "end": "2019-03-29", "small": 1, "medium": 0, "large": 0 }
+{ "command": "request", "id": "Year Long Meeting", "start": "2018-03-25", "end": "2019-03-26", "small": 1, "medium": 0, "large": 0 }

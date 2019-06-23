@@ -58,7 +58,7 @@ public class VenueManager {
 						a++;
 					} else if (venues.get(i).getRooms().get(j) instanceof MediumRoom && (b < medium)) {
 						b++;
-					} else if (c < large) {
+					} else if (venues.get(i).getRooms().get(j) instanceof LargeRoom && (c < large)) {
 						c++;
 					}
 				}
@@ -98,14 +98,11 @@ public class VenueManager {
 					} else if (venues.get(i).getRooms().get(j) instanceof MediumRoom && (b < medium)) {
 						b++;
 						rooms.add(venues.get(i).getRooms().get(j));
-					} else if (c < large) {
+					} else if (venues.get(i).getRooms().get(j) instanceof LargeRoom && (c < large)) {
 						c++;
 						rooms.add(venues.get(i).getRooms().get(j));
 					}
 				}
-				
-				
-				//System.out.print(venues.get(i).getRooms().get(j).getName());
 			}
 			if (a == small && b == medium && c == large) {
 				return rooms;
@@ -133,7 +130,7 @@ public class VenueManager {
 					a++;
 				} else if (venues.get(i).getRooms().get(j) instanceof MediumRoom && (b < medium)) {
 					b++;
-				} else if (c < large) {
+				} else if (venues.get(i).getRooms().get(j) instanceof LargeRoom && (c < large)) {
 					c++;
 				}
 			}

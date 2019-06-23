@@ -1,0 +1,17 @@
+{ "command": "room", "venue": "Zoo", "room": "Penguin", "size": "small" }
+{ "command": "room", "venue": "Zoo", "room": "Hippo", "size": "medium" }
+{ "command": "room", "venue": "Gardens", "room": "Figtree", "size": "large" }
+{ "command": "room", "venue": "Gardens", "room": "Cactus", "size": "large" }
+{ "command": "room", "venue": "Gardens", "room": "Palm", "size": "large" }
+{ "command": "cancel", "id": "Non Existent Event" }
+{ "command": "change", "id": "Still Non Existent Event", "start": "2019-03-27", "end": "2019-03-29", "small": 1, "medium": 0, "large": 0 }
+{ "command": "list", "venue": "Zoo" }
+{ "command": "request", "id": "Year Long Meeting", "start": "2018-03-25", "end": "2019-03-26", "small": 1, "medium": 1, "large": 1 }
+{ "command": "request", "id": "Year Long Meeting", "start": "2018-03-25", "end": "2019-03-26", "small": 1, "medium": 1, "large": 0 }
+{ "command": "change", "id": "Year Long Meeting", "start": "2018-03-25", "end": "2019-03-26", "small": 1, "medium": 1, "large": 1 }
+{ "command": "list", "venue": "Zoo" }
+{ "command": "request", "id": "Dance Party", "start": "2019-03-26", "end": "2019-03-26", "small": 0, "medium": 0, "large": 3 }
+{ "command": "request", "id": "Fun Event", "start": "2018-04-12", "end": "2018-07-11", "small": 0, "medium": 1, "large": 0 }
+{ "command": "request", "id": "Boring Event", "start": "2019-03-27", "end": "2019-03-28", "small": 1, "medium": 1, "large": 0 }
+{ "command": "list", "venue": "Zoo" }
+{ "command": "list", "venue": "Gardens" }
