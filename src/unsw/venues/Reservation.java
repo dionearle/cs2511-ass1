@@ -17,9 +17,14 @@ public class Reservation {
 		this.endDate = endDate;
 		this.venue = venue;
 		this.rooms = rooms;
+		setRoomReservations(rooms, startDate, endDate);
+	}
+	
+	public void setRoomReservations(List<Room> rooms, LocalDate start, LocalDate end) {
 		
 		for (int i=0; i < rooms.size(); i++) {
-			rooms.get(i).setReservedDates(startDate, endDate);
+			Room room = rooms.get(i);
+			room.setReservedDates(start, end);
 		}
 	}
 	
@@ -41,6 +46,10 @@ public class Reservation {
 
 	public LocalDate getEndDate() {
 		return endDate;
+	}
+	
+	public String getVenueName() {
+		return venue.getName();
 	}
 	
 	

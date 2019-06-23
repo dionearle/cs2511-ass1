@@ -1,6 +1,6 @@
 { "command": "room", "venue": "v1", "room": "Room", "size": "small" }
 { "command": "room", "venue": "v2", "room": "Room", "size": "medium" }
-{ "command": "room", "venue": "v3", "room": "Room", "size": "large" }
+{ "command": "room", "venue": "v3", "room": "Room", "size": "large" }z
 { "command": "room", "venue": "v4", "room": "Room", "size": "large" }
 { "command": "room", "venue": "v5", "room": "Room", "size": "large" }
 { "command": "room", "venue": "v6", "room": "Room", "size": "large" }

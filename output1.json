@@ -1,0 +1,54 @@
+{
+  "venue": "Gardens",
+  "rooms": [
+    "Figtree",
+    "Cactus"
+  ],
+  "status": "success"
+}
+{"status": "rejected"}
+{
+  "venue": "Zoo",
+  "rooms": ["Elephant"],
+  "status": "success"
+}
+[
+  {
+    "reservations": [],
+    "room": "Penguin"
+  },
+  {
+    "reservations": [],
+    "room": "Hippo"
+  },
+  {
+    "reservations": [{
+      "start": "2019-03-26",
+      "end": "2019-03-26",
+      "id": "Dance Party"
+    }],
+    "room": "Elephant"
+  }
+]
+[
+  {
+    "reservations": [{
+      "start": "2018-03-25",
+      "end": "2019-03-25",
+      "id": "Year Long Meeting"
+    }],
+    "room": "Figtree"
+  },
+  {
+    "reservations": [{
+      "start": "2018-03-25",
+      "end": "2019-03-25",
+      "id": "Year Long Meeting"
+    }],
+    "room": "Cactus"
+  },
+  {
+    "reservations": [],
+    "room": "Palm"
+  }
+]

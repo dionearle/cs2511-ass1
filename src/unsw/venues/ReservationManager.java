@@ -12,45 +12,50 @@ public class ReservationManager {
 		this.reservations = new ArrayList<>();
 	}
 	
-	public boolean findReservation(String id) {
-		int numReservations = reservations.size();
-		for (int i=0; i < numReservations; i++) {
-			if (id.equals(reservations.get(i).getId())) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public Reservation getReservation(String id) {
-		int numReservations = reservations.size();
-		for (int i=0; i < numReservations; i++) {
-			if (id.equals(reservations.get(i).getId())) {
-				return reservations.get(i);
+		
+		for (int i=0; i < reservations.size(); i++) {
+			
+			Reservation reservation = reservations.get(i);
+			if (id.equals(reservation.getId())) {
+				return reservation;
 			}
 		}
+		
 		return null;
 	}
 	
 	public void addReservation(String id, LocalDate start, LocalDate end, Venue venue, List<Room> rooms) {
 		
-		Reservation newReservation = new Reservation(id, start, end, venue, rooms);
-		reservations.add(newReservation);
+		reservations.add(new Reservation(id, start, end, venue, rooms));
 	}
 	
-	public void cancelReservation(String id, Reservation reservation) {
+	public void cancelReservation(Reservation reservation) {
+		
 		List<Room> rooms = reservation.getRooms();
 		LocalDate start = reservation.getStartDate();
 		LocalDate end = reservation.getEndDate();
 		
 		for (int i=0; i < rooms.size(); i++) {
-			rooms.get(i).removeReservedDates(start, end);
+			Room room = rooms.get(i);
+			room.removeReservedDates(start, end);
 		}
+		
 		reservations.remove(reservation);
 		
 	}
 	
-	public List<Reservation> getReservations() {
+	public List<Reservation> listReservations() {
 		return reservations;
+	}
+	
+	public Venue getVenueFromId(String id) {
+		Reservation reservation = getReservation(id);
+		return reservation.getVenue();
+	}
+	
+	public List<Room> getRoomsFromId(String id) {
+		Reservation reservation = getReservation(id);
+		return reservation.getRooms();
 	}
 }	

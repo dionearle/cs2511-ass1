@@ -28,15 +28,17 @@ public class VenueHireSystem {
      * rooms, or bookings.
      */
 	
-	private ReservationManager reservationManager = new ReservationManager();
-	private VenueManager venueManager = new VenueManager();
+	private ReservationManager reservationManager;
+	private VenueManager venueManager;
 	
     public VenueHireSystem() {
-        // TODO Auto-generated constructor stub
+    	this.reservationManager = new ReservationManager();
+        this.venueManager = new VenueManager();
     }
 
     private void processCommand(JSONObject json) {
-        switch (json.getString("command")) {
+        
+    	switch (json.getString("command")) {
 
         case "room":
         {	
@@ -103,25 +105,27 @@ public class VenueHireSystem {
     private void addRoom(String venue, String room, String size) {
         
     	// If the venue doesn't already exist, create it
-    	if (!venueManager.findVenue(venue)) {
+    	if (venueManager.getVenue(venue) == null) {
     		venueManager.addVenue(venue);
     	}
     	    	
     	// Now we know the venue exists, we add the room to it
-    	Venue currentVenue = venueManager.getVenue(venue);
-    	venueManager.addRoom(currentVenue, room, size);
+    	venueManager.addRoom(venueManager.getVenue(venue), room, size);
     }
 
     public JSONObject request(String id, LocalDate start, LocalDate end,
             int small, int medium, int large) {
         
     	JSONObject result = new JSONObject();
-
-    	boolean available = venueManager.checkRooms(start, end, small, medium, large);
     	
-    	if (available) {
-    		Venue venue = venueManager.getVenue(start, end, small, medium, large);
-    		List<Room> rooms = venueManager.getRooms(start, end, small, medium, large);
+    	Venue venue = venueManager.getAvailableVenue(start, end, small, medium, large);
+    	
+    	// if there is an available venue for this request
+    	if (venue != null) {
+    
+    		List<Room> rooms = venueManager.getAvailableRooms(start, end, small, medium, large, venue);
+    		
+    		
     		reservationManager.addReservation(id, start, end, venue, rooms);
     		
     		result.put("status", "success");
@@ -129,10 +133,12 @@ public class VenueHireSystem {
     		
     		JSONArray outputRooms = new JSONArray();
     		for (int i = 0; i < rooms.size(); i++) {
-    			outputRooms.put(rooms.get(i).getName());
+    			Room room = rooms.get(i);
+    			outputRooms.put(room.getName());
     		}
     		
     		result.put("rooms", outputRooms);
+    		
     	} else {
     		result.put("status", "rejected");
     	}
@@ -145,27 +151,27 @@ public class VenueHireSystem {
         
     	JSONObject result = new JSONObject();
     	
-    	if (!reservationManager.findReservation(id)) {
+    	// We first check if the reservation id exists
+    	if (reservationManager.getReservation(id) == null) {
     		result.put("status", "rejected");
     		return result;
     	}
     	
     	// first we make a copy of info from current version of reservation id
-    	Reservation oldReservation = reservationManager.getReservation(id);
-    	Venue venue = oldReservation.getVenue();
-    	List<Room> rooms = oldReservation.getRooms();
+    	Venue venue = reservationManager.getVenueFromId(id);
+    	List<Room> rooms = reservationManager.getRoomsFromId(id);
     	
     	// then we cancel reservation id
     	cancel(id);
     	
     	// then we request new reservation
-    	JSONObject attemptedReservation = request(id, start, end, small, medium, large);
+    	JSONObject newReservationResult = request(id, start, end, small, medium, large);
     	
-    	String success = (String) attemptedReservation.get("status");
+    	String status = (String) newReservationResult.get("status");
     	
     	// if it succeeds, then we simply return new JSON output
-    	if (success.equals("success")) {
-    		return attemptedReservation;
+    	if (status.equals("success")) {
+    		return newReservationResult;
     	}
     	
     	// if it fails, then we recreate old copy of reservation
@@ -177,23 +183,24 @@ public class VenueHireSystem {
     }
     
     public JSONObject cancel(String id) {
-    	
     	JSONObject result = new JSONObject();
     	
-    	if (!reservationManager.findReservation(id)) {
+    	// We first check to see if the reservation id exists
+    	if (reservationManager.getReservation(id) == null) {
     		result.put("status", "rejected");
     		return result;
     	}
     	    	
     	Reservation reservation = reservationManager.getReservation(id);
-    	reservationManager.cancelReservation(id, reservation);
+    	reservationManager.cancelReservation(reservation);
     	reservation = null;
+    	
     	result.put("status", "success");
 
         return result;
     }
     
-public JSONArray list(String venue) {
+    public JSONArray list(String venue) {
         
     	JSONArray result = new JSONArray();
     	
@@ -201,40 +208,53 @@ public JSONArray list(String venue) {
     	List<Room> rooms = currentVenue.getRooms();
     	
 		for (int i = 0; i < rooms.size(); i++) {
+			
+			Room currentRoom = rooms.get(i);
 
 			JSONObject outputRooms = new JSONObject();
 			JSONArray outputReservations = new JSONArray();
-			List<Reservation> reservations = reservationManager.getReservations();
-
+			List<Reservation> reservations = reservationManager.listReservations();
+			
+			// This sorts all the reservations by date
 			Collections.sort(reservations, new Comparator<Reservation>() {
-		        public int compare(Reservation first, Reservation second) {
-		            return first.getStartDate().compareTo(second.getStartDate());
+		        public int compare(Reservation res1, Reservation res2) {
+		        	LocalDate first = res1.getStartDate();
+		        	LocalDate second = res2.getStartDate();
+		            return first.compareTo(second);
 		        }
 		    }
 		    );
-			
+
 			for (int j = 0; j < reservations.size(); j++) {
 				
-				List<Room> reservationRooms = reservations.get(j).getRooms();
+				Reservation currentReservation = reservations.get(j);
+				
+				List<Room> reservationRooms = currentReservation.getRooms();
 				for (int k=0; k < reservationRooms.size(); k++) {
-					if (reservationRooms.get(k).getName().equals(rooms.get(i).getName())
-					&& reservations.get(j).getVenue().getName().equals(venue)) {
-						JSONObject reservation = new JSONObject();
-						reservation.put("id", reservations.get(j).getId());
-						reservation.put("start", reservations.get(j).getStartDate());
-						reservation.put("end", reservations.get(j).getEndDate());
-
+					
+					Room room = reservationRooms.get(k);
+					String roomName = room.getName();
+					String venueName = currentReservation.getVenueName();
+					
+					if (roomName.equals(currentRoom.getName())
+					&& venueName.equals(venue)) {
 						
+						JSONObject reservation = new JSONObject();
+						reservation.put("id", currentReservation.getId());
+						reservation.put("start", currentReservation.getStartDate());
+						reservation.put("end", currentReservation.getEndDate());
+
 						outputReservations.put(reservation);
 					}
 				}
 			}
-			
-			outputRooms.put("room", rooms.get(i).getName());
+			Room room = rooms.get(i);
+			outputRooms.put("room", room.getName());
 			outputRooms.put("reservations", outputReservations);
 			result.put(outputRooms);
+			
 		}
-		
+
         return result;
     }
 

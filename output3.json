@@ -1,0 +1,82 @@
+[{
+  "reservations": [],
+  "room": "Room"
+}]
+{"status": "rejected"}
+{"status": "rejected"}
+{"status": "rejected"}
+{
+  "venue": "v3",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v4",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v5",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v6",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v7",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v8",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v9",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v10",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{"status": "rejected"}
+{
+  "venue": "v3",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{"status": "rejected"}
+{
+  "venue": "v1",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v3",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v3",
+  "rooms": ["Room"],
+  "status": "success"
+}
+{
+  "venue": "v3",
+  "rooms": ["Room"],
+  "status": "success"
+}
+[{
+  "reservations": [{
+    "start": "2019-03-25",
+    "end": "2019-03-27",
+    "id": "e8"
+  }],
+  "room": "Room"
+}]

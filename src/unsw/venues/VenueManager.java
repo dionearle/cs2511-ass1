@@ -12,16 +12,6 @@ public class VenueManager {
 		this.venues= new ArrayList<>();
 	}
 	
-	public boolean findVenue(String venue) {
-		int numVenues = venues.size();
-		for (int i=0; i < numVenues; i++) {
-			if (venue.equals(venues.get(i).getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public void addVenue(String venue) {
 		venues.add(new Venue(venue));
 	}
@@ -31,119 +21,77 @@ public class VenueManager {
 	}
 	
 	public Venue getVenue(String venue) {
-		int numVenues = venues.size();
-		for (int i=0; i < numVenues; i++) {
-			if (venue.equals(venues.get(i).getName())) {
-				return venues.get(i);
+		
+		for (int i=0; i < venues.size(); i++) {
+			
+			Venue currVenue = venues.get(i);
+			if (venue.equals(currVenue.getName())) {
+				return currVenue;
 			}
 		}
+		
 		return null;
 	}
 	
-	public boolean checkRooms(LocalDate start, LocalDate end, int small, int medium, int large) {
+	public Venue getAvailableVenue(LocalDate start, LocalDate end, int small, int medium, int large) {
 		
-		boolean available = false;
-		int numVenues = venues.size();
-		for (int i=0; i < numVenues; i++) {
-			int numRooms = venues.get(i).getRooms().size();
+		for (int i=0; i < venues.size(); i++) {
+			
 			int a, b, c;
 			a = b = c = 0;
-			for (int j=0; j < numRooms; j++) {
-				
-				if (venues.get(i).getRooms().get(j).isAvailable(start, end)) {
-					
-					// Room is available
-					// Now determine what type and add to either a, b or c
-					if (venues.get(i).getRooms().get(j) instanceof SmallRoom && (a < small)) {
-						a++;
-					} else if (venues.get(i).getRooms().get(j) instanceof MediumRoom && (b < medium)) {
-						b++;
-					} else if (venues.get(i).getRooms().get(j) instanceof LargeRoom && (c < large)) {
-						c++;
-					}
-				}
-				
-				
-				//System.out.print(venues.get(i).getRooms().get(j).getName());
-			}
-			if (a == small && b == medium && c == large) {
-				available = true;
-				break;
-			}
-		}
-		
-		
-		return available;
-	}
-	
-	public List<Room> getRooms(LocalDate start, LocalDate end, int small, int medium, int large) {
-		
-		int numVenues = venues.size();
-		for (int i=0; i < numVenues; i++) {
-			
-			List<Room> rooms = new ArrayList<> ();
-			
-			int numRooms = venues.get(i).getRooms().size();
-			int a, b, c;
-			a = b = c = 0;
-			for (int j=0; j < numRooms; j++) {
-				
-				if (venues.get(i).getRooms().get(j).isAvailable(start, end)) {
-					
-					// Room is available
-					// Now determine what type and add to either a, b or c
-					if (venues.get(i).getRooms().get(j) instanceof SmallRoom && (a < small)) {
-						a++;
-						rooms.add(venues.get(i).getRooms().get(j));
-					} else if (venues.get(i).getRooms().get(j) instanceof MediumRoom && (b < medium)) {
-						b++;
-						rooms.add(venues.get(i).getRooms().get(j));
-					} else if (venues.get(i).getRooms().get(j) instanceof LargeRoom && (c < large)) {
-						c++;
-						rooms.add(venues.get(i).getRooms().get(j));
-					}
-				}
-			}
-			if (a == small && b == medium && c == large) {
-				return rooms;
-			}
-		}
-		
-		
-		return null;
-	}
+			Venue venue = venues.get(i);
+			for (int j=0; j < venue.getNumRooms(); j++) {
 
-	public Venue getVenue(LocalDate start, LocalDate end, int small, int medium, int large) {
+				if (venue.isRoomAvailable(j, start, end)) {
+					
+					Room room = venue.getRoom(j);
+					
+					// Room is available
+					// Now determine what type and add to either a, b or c
+					if (room instanceof SmallRoom && (a < small)) {
+						a++;
+					} else if (room instanceof MediumRoom && (b < medium)) {
+						b++;
+					} else if (room instanceof LargeRoom && (c < large)) {
+						c++;
+					}
+				}
+			}
+			if (a == small && b == medium && c == large) {
+				return venue;
+			}
+		}
+		
+		return null;
+	}
 	
-	int numVenues = venues.size();
-	for (int i=0; i < numVenues; i++) {
-		int numRooms = venues.get(i).getRooms().size();
+	public List<Room> getAvailableRooms(LocalDate start, LocalDate end, int small, int medium, int large, Venue venue) {
+			
+		List<Room> rooms = new ArrayList<> ();
+		
 		int a, b, c;
 		a = b = c = 0;
-		for (int j=0; j < numRooms; j++) {
-			
-			if (venues.get(i).getRooms().get(j).isAvailable(start, end)) {
+		for (int j=0; j < venue.getNumRooms(); j++) {
 				
+			if (venue.isRoomAvailable(j, start, end)) {
+				
+				Room room = venue.getRoom(j);
+					
 				// Room is available
 				// Now determine what type and add to either a, b or c
-				if (venues.get(i).getRooms().get(j) instanceof SmallRoom && (a < small)) {
+				if (room instanceof SmallRoom && (a < small)) {
 					a++;
-				} else if (venues.get(i).getRooms().get(j) instanceof MediumRoom && (b < medium)) {
+					rooms.add(room);
+				} else if (room instanceof MediumRoom && (b < medium)) {
 					b++;
-				} else if (venues.get(i).getRooms().get(j) instanceof LargeRoom && (c < large)) {
+					rooms.add(room);
+				} else if (room instanceof LargeRoom && (c < large)) {
 					c++;
+					rooms.add(room);
 				}
 			}
-			
-			
-			//System.out.print(venues.get(i).getRooms().get(j).getName());
 		}
-		if (a == small && b == medium && c == large) {
-			return venues.get(i);
-		}
+		
+		return rooms;
 	}
-	
-	
-	return null;
-}
 }
